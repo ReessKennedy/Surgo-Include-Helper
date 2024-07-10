@@ -12,32 +12,51 @@ function file_test($filePath) {
 /**
  * Function to generate stats for file existence.
  * 
+ * @param string $fileName The file name.
  * @param string $filePath The full path to the file.
  * @param string $outputType The type of output (bool, text, or emoji).
- * @return array Array containing file path and existence status.
+ * @return array Array containing file name and existence status.
  */
-function InclusionStats($filePath, $outputType = 'bool') {
+function StatsVar($fileName, $filePath, $outputType = 'bool') {
     $fileExists = file_test($filePath);
 
     $status = $fileExists;
     if ($outputType === 'emoji') {
         $status = $fileExists ? '✅' : '❌';
     } elseif ($outputType === 'text') {
-        $status = $fileExists ? true : false;
+        $status = $fileExists ? 'exists' : 'does not exist';
     }
 
     return [
-        'file' => $filePath,
+        'file' => $fileName,
         'exists' => $status
     ];
+}
+
+/**
+ * Function to display stats in different formats.
+ * 
+ * @param array $stats The array of stats to be displayed.
+ * @param string $displayType The type of display (array, text_csv).
+ * @return mixed Formatted stats based on display type.
+ */
+function StatsDisplay($stats, $displayType = 'array') {
+    if ($displayType === 'text_csv') {
+        $csvOutput = '';
+        foreach ($stats as $stat) {
+            $csvOutput .= $stat['file'] . ' ' . $stat['exists'] . ', ';
+        }
+        return rtrim($csvOutput, ', ');
+    }
+    return $stats; // Default is to return the array
 }
 
 /**
  * Function to merge an array of file names with a given path from settings,
  * and include additional stats if required.
  * 
- * @param array $settings Associative array containing 'path', 'files', 'suffix', and 'stats' keys.
- * @return array Array of full paths of files that exist, or detailed stats if 'stats' is set.
+ * @param array $settings Associative array containing 'path', 'files', 'suffix', 'stats', and 'display' keys.
+ * @return mixed Array of file names that exist, or detailed stats if 'stats' is set, formatted by 'display' setting.
  */
 function inclusion($settings) {
     // Default settings
@@ -45,7 +64,8 @@ function inclusion($settings) {
         'path' => '',
         'files' => [],
         'suffix' => '', // Optional suffix for file names
-        'stats' => false // Optional stats setting
+        'stats' => false, // Optional stats setting
+        'display' => 'array' // Optional display setting
     ];
     
     // Merge default settings with user-provided settings
@@ -59,19 +79,27 @@ function inclusion($settings) {
     $files = $settings['files'];
     $suffix = $settings['suffix'];
     $stats = $settings['stats'];
+    $display = $settings['display'];
     
     $fullPaths = array();
     foreach ($files as $file) {
         $fullPath = $path . $file . $suffix;
 
-        if ($stats) {
-            $fullPaths[] = InclusionStats($fullPath, $stats);
+        if ($stats === 'emoji' || $stats === 'text') {
+            $fullPaths[] = StatsVar($file, $fullPath, $stats);
         } else {
             if (file_test($fullPath)) {
-                $fullPaths[] = $fullPath;
+                $fullPaths[] = $file;
             }
         }
     }
     
-    return $fullPaths;
+    if ($stats === 'emoji' || $stats === 'text') {
+        return StatsDisplay($fullPaths, $display);
+    } elseif (!$stats) {
+        return $fullPaths;
+    } else {
+        return ''; // Return an empty string if stats is set but not to 'text_csv' or 'array'
+    }
 }
+
