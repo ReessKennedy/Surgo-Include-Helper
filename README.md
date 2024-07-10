@@ -1,5 +1,5 @@
 ## What ⚡
-Pull in commonly used code snippets in a simple, atomic way. It's a very simple function but I use it in everything and thought it needed a dedicated Github repo and explanation of the concept behind it, as I think the concept of atomicity is broadly important in information management. 
+Pull in commonly used code snippets in a simple, atomic way. 
 
 ## Why Atomic 🤷‍♂️
 Writing a large number of functions to one file might initially feel efficient, especially if you group them into a file with related functions like "time" but then you move on to another project and realize you need to do lots of the same basic stuff but all the stuff from previous projects is buried in long files and it takes quite a bit of time to pull out the bits you need. 
