@@ -3,7 +3,8 @@ include('inclusion.php');
 
 // Example usage
 $settings = array(
-    'path' => 'path/to/my/snippets',
+    'path' => '/Users/Reess/Code/Snippets/php/',
+    'suffix' => '.php', // Optional suffix
     'files' => array(
         'api_requests',  // This is the API request snippet
         'surgo_table_td',	
