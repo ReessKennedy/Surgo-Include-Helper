@@ -5,6 +5,7 @@ include('inclusion.php');
 $settings = array(
     'path' => '/Users/Reess/Code/Snippets/php/',
     'suffix' => '.php', // Optional suffix
+    'stats' => 'text', // Optional stats setting
     'files' => array(
         'api_requests',  // This is the API request snippet
         'surgo_table_td',	
